@@ -95,8 +95,44 @@ const listaClientes = () =>   // llamamos el metodo fetch y en el pasamos la url
 fetch('http://localhost:3000/perfil').then(respuesta => respuesta.json()  // al obtener la promesa la retornamos y la convertimos en formato Json
 );
 
-export const clientServices = {
+const crearCliente = (nombre, email) =>{  // creamos otra funcion que va a enviar los datos de registro a la API
+    return fetch("http://localhost:3000/perfil", {        // le decimos a donde queremos que envie los datos
+        method: "POST",      // asignamos el metodo POST para enviar
+        headers: {           // creamos los encabezados para que el server sepa que va a recibir
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({nombre, email, id: uuid.v4()})  // en el cuerpo del msj va a ir el nombre y el email y con JSON.stringify convertimos formato de JSON a formato de texto para que se pueda dejar en la API - ademas vamos a importar una libreria llamada UUID para que nos genere un Id nuevo en cada registro, la registramos en el HTML y la llamamos
+    })
+};
+
+const eliminarCliente = (id) =>{
+    return fetch(`http://localhost:3000/perfil/${id}`, { // aqui nos conectamos con la url y enviamos como parametro el id 
+        method: 'DELETE'
+    })
+}
+
+const detalleCliente = (id) =>{
+    return fetch(`http://localhost:3000/perfil/${id}`).then((respuesta)=>
+        respuesta.json()
+    );
+};
+
+const actualizarCliente = (nombre, email, id) =>{  // Toma los parametros nombre, mail, id 
+    return fetch(`http://localhost:3000/perfil/${id}`, { // vamos a conectar la pagina
+        method: 'PUT',     // usamos el metodos PUT  para editar
+        headers: {        // asignamos los encabezados
+            "Content-Type":"application/json"  
+        },
+        body: JSON.stringify({nombre, email})    // en el cuerpo pasamos el nombre y el email y lo vamos a convertir en JSON
+    }).then((respuesta) =>respuesta).catch(err => console.log(err));
+}
+
+export const clientServices = {   // hacemos la exportacion de archivos
     listaClientes,
+    crearCliente,  
+    eliminarCliente, 
+    detalleCliente,  
+    actualizarCliente, 
 }
 
 
